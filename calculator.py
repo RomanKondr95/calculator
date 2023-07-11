@@ -24,7 +24,7 @@ def add_operation(operation):
         calculate()
         value = calc.get()
     calc.delete(0, tk.END)
-    calc.insert(0, value+operation)
+    calc.insert(0, value + operation)
 
 def calculate():
     """
@@ -42,13 +42,16 @@ def clear():
     функция очистки
 
     """
-    calc.delete(0, tk.END)
-    calc.insert(0, '0')
-
-
-
-
-
+    value = calc.get()
+    if value != '0':
+        new_value = value[:-1]
+    if len(value) != 1:
+        calc.delete(0, tk.END)
+        calc.insert(0, new_value)
+    else:
+        calc.delete(0, tk.END)
+        calc.insert(0,'0')
+    
 
 def make_digit_button(digit):
     """
@@ -78,6 +81,21 @@ def make_clear_button(operation):
     """
     return tk.Button(text=operation,bd=5,font=('Arial',13),command=clear,fg='red')
 
+def press_key(event):
+    """
+    функция привязывает кнопки к клавиатуре
+
+    """
+    if event.char.isdigit():
+        add_digit(event.char)
+    elif event.char in '+-*/':
+        add_operation(event.char)
+    elif event.char == '\r':
+        calculate()
+    elif event.char == '\b':
+        clear()
+
+
 
 window = tk.Tk()
 # задал разрешение
@@ -86,6 +104,8 @@ window.geometry(f"240x270+100+200")
 window['bg'] = '#00FA9A'
 # заголовок
 window.title('Калькулятор')
+# привязка к клавиатуре
+window.bind('<Key>',press_key)
 
 calc = tk.Entry(window,justify=tk.RIGHT,font=('Arial',15),width=15)
 # по умолчанию стоит 0
