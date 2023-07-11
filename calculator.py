@@ -7,7 +7,7 @@ def add_digit(digit):
 
     """
     value = calc.get()
-    if value[0] == '0':
+    if value[0] == '0' and len(value) == 1:
         value = value[1:]
     calc.delete(0,tk.END)
     calc.insert(0,value+digit)
@@ -20,8 +20,34 @@ def add_operation(operation):
     value = calc.get()
     if value[-1] in '+-*/':
         value = value[:-1]
+    elif '+' in value or '-' in value or '*' in value or '/' in value:
+        calculate()
+        value = calc.get()
     calc.delete(0, tk.END)
     calc.insert(0, value+operation)
+
+def calculate():
+    """
+    функция вычисления
+
+    """
+    value = calc.get()
+    if value[-1] in '+-*/':
+        value = value + value[:-1]
+    calc.delete(0, tk.END)
+    calc.insert(0, eval(value))
+
+def clear():
+    """
+    функция очистки
+
+    """
+    calc.delete(0, tk.END)
+    calc.insert(0, '0')
+
+
+
+
 
 
 def make_digit_button(digit):
@@ -43,7 +69,14 @@ def make_calc_button(operation):
     функция для создания кнопки вычисления
     
     """
-    return tk.Button(text=operation,bd=5,font=('Arial',13),command=lambda:add_digit(operation),fg='red')
+    return tk.Button(text=operation,bd=5,font=('Arial',13),command=calculate,fg='red')
+
+def make_clear_button(operation):
+    """
+    функция для создания кнопки очистки
+    
+    """
+    return tk.Button(text=operation,bd=5,font=('Arial',13),command=clear,fg='red')
 
 
 window = tk.Tk()
@@ -75,8 +108,10 @@ make_operation_button('+').grid(row=1,column=3,stick='wens',padx=5,pady=5)
 make_operation_button('-').grid(row=2,column=3,stick='wens',padx=5,pady=5)
 make_operation_button('*').grid(row=3,column=3,stick='wens',padx=5,pady=5)
 make_operation_button('/').grid(row=4,column=3,stick='wens',padx=5,pady=5)
-# кнопки вычислений
+# кнопка вычислений
 make_calc_button('=').grid(row=4,column=2,stick='wens',padx=5,pady=5)
+# кнопка очистки
+make_clear_button('C').grid(row=4,column=1,stick='wens',padx=5,pady=5)
 
 # задал размерность колонкам и рядам
 window.grid_columnconfigure(0,minsize=60)
