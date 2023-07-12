@@ -7,7 +7,7 @@ def add_digit(digit):
 
     """
     value = calc.get()
-    if value[0] == '0':
+    if value[0] == '0' and len(value) == 1:
         value = value[1:]
     calc['state'] = tk.NORMAL
     calc.delete(0,tk.END)
@@ -103,6 +103,28 @@ def press_key(event):
     elif event.char == '\b':
         clear()
 
+
+def make_clear_button(operation):
+    """
+    функция для создания кнопки очистки
+    
+    """
+    return tk.Button(text=operation,bd=5,font=('Arial',13),command=clear,fg='red')
+
+def press_key(event):
+    """
+    функция привязывает кнопки к клавиатуре
+
+    """
+    if event.char.isdigit():
+        add_digit(event.char)
+    elif event.char in '+-*/':
+        add_operation(event.char)
+    elif event.char == '\r':
+        calculate()
+    elif event.char == '\b':
+        clear()
+
 window = tk.Tk()
 # задал разрешение
 window.geometry(f"240x270+100+200")
@@ -110,6 +132,8 @@ window.geometry(f"240x270+100+200")
 window['bg'] = '#00FA9A'
 # заголовок
 window.title('Калькулятор')
+# привязка к клавиатуре
+window.bind('<Key>',press_key)
 
 calc = tk.Entry(window,justify=tk.RIGHT,font=('Arial',15),width=15)
 # по умолчанию стоит 0
@@ -134,8 +158,10 @@ make_operation_button('+').grid(row=1,column=3,stick='wens',padx=5,pady=5)
 make_operation_button('-').grid(row=2,column=3,stick='wens',padx=5,pady=5)
 make_operation_button('*').grid(row=3,column=3,stick='wens',padx=5,pady=5)
 make_operation_button('/').grid(row=4,column=3,stick='wens',padx=5,pady=5)
-# кнопки вычислений
+# кнопка вычислений
 make_calc_button('=').grid(row=4,column=2,stick='wens',padx=5,pady=5)
+# кнопка очистки
+make_clear_button('C').grid(row=4,column=1,stick='wens',padx=5,pady=5)
 
 # задал размерность колонкам и рядам
 window.grid_columnconfigure(0,minsize=60)
