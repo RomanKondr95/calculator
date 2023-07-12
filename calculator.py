@@ -138,7 +138,6 @@ window.bind('<Key>',press_key)
 calc = tk.Entry(window,justify=tk.RIGHT,font=('Arial',15),width=15)
 # по умолчанию стоит 0
 calc.insert(0,'0')
-calc['state'] = tk.DISABLED
 # окошко ввода:
 calc.grid(row=0,column=0, columnspan=4,stick = 'we',padx=5)
 calc['state'] = tk.DISABLED
