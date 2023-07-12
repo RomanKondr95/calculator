@@ -9,8 +9,10 @@ def add_digit(digit):
     value = calc.get()
     if value[0] == '0':
         value = value[1:]
+    calc['state'] = tk.NORMAL
     calc.delete(0,tk.END)
     calc.insert(0,value+digit)
+    calc['state'] = tk.DISABLED
 
 def add_operation(operation):
     """
@@ -20,16 +22,51 @@ def add_operation(operation):
     value = calc.get()
     if value[-1] in '+-*/':
         value = value[:-1]
+    elif '+' in value or '-' in value or '*' in value or '/' in value:
+        calculate()
+        value = calc.get()
+    calc['state'] = tk.NORMAL
     calc.delete(0, tk.END)
-    calc.insert(0, value+operation)
+    calc.insert(0, value + operation)
+    calc['state'] = tk.DISABLED
 
+def calculate():
+    """
+    функция вычисления
+
+    """
+    value = calc.get()
+    if value[-1] in '+-*/':
+        value = value + value[:-1]
+    calc['state'] = tk.NORMAL
+    calc.delete(0, tk.END)
+    calc.insert(0, eval(value))
+    calc['state'] = tk.DISABLED
+
+def clear():
+    """
+    функция очистки
+
+    """
+    value = calc.get()
+    if value != '0':
+        new_value = value[:-1]
+    calc['state'] = tk.NORMAL
+    if len(value) != 1:
+        calc.delete(0, tk.END)
+        calc.insert(0, new_value)
+    else:
+        calc.delete(0, tk.END)
+        calc.insert(0,'0')
+    calc['state'] = tk.DISABLED
+    
 
 def make_digit_button(digit):
     """
     функция для создания кнопки цифры
     
     """
-    return tk.Button(text=digit,bd=5,font=('Arial',13),command=lambda:add_digit(digit))
+    return tk.Button(text=digit,bd=10,font=('Arial',13),command=lambda:add_digit(digit))
 
 def make_operation_button(operation):
     """
@@ -59,6 +96,7 @@ calc = tk.Entry(window,justify=tk.RIGHT,font=('Arial',15),width=15)
 calc.insert(0,'0')
 # окошко ввода:
 calc.grid(row=0,column=0, columnspan=4,stick = 'we',padx=5)
+calc['state'] = tk.DISABLED
 # кнопки цифр с указанием места в гриде, растянутых на все 4 стороны с пространством между ними:
 make_digit_button('1').grid(row=1,column=0,stick='wens',padx=5,pady=5)
 make_digit_button('2').grid(row=1,column=1,stick='wens',padx=5,pady=5)
