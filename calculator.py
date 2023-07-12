@@ -80,8 +80,28 @@ def make_calc_button(operation):
     функция для создания кнопки вычисления
     
     """
-    return tk.Button(text=operation,bd=5,font=('Arial',13),command=lambda:add_digit(operation),fg='red')
+    return tk.Button(text=operation,bd=5,font=('Arial',13),command=calculate,fg='red')
 
+def make_clear_button(operation):
+    """
+    функция для создания кнопки очистки
+    
+    """
+    return tk.Button(text=operation,bd=5,font=('Arial',13),command=clear,fg='red')
+
+def press_key(event):
+    """
+    функция привязывает кнопки к клавиатуре
+
+    """
+    if event.char.isdigit():
+        add_digit(event.char)
+    elif event.char in '+-*/':
+        add_operation(event.char)
+    elif event.char == '\r':
+        calculate()
+    elif event.char == '\b':
+        clear()
 
 window = tk.Tk()
 # задал разрешение
@@ -94,6 +114,7 @@ window.title('Калькулятор')
 calc = tk.Entry(window,justify=tk.RIGHT,font=('Arial',15),width=15)
 # по умолчанию стоит 0
 calc.insert(0,'0')
+calc['state'] = tk.DISABLED
 # окошко ввода:
 calc.grid(row=0,column=0, columnspan=4,stick = 'we',padx=5)
 calc['state'] = tk.DISABLED
@@ -126,10 +147,5 @@ window.grid_rowconfigure(1,minsize=60)
 window.grid_rowconfigure(2,minsize=60)
 window.grid_rowconfigure(3,minsize=60)
 window.grid_rowconfigure(4,minsize=60)
-
-
-
-
-
 
 window.mainloop()
